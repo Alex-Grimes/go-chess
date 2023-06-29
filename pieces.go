@@ -5,5 +5,5 @@ package main
 import "fyne.io/fyne"
 
 func resourceForPiece() fyne.Resource {
-	return resourceBlackPawnSvg
+	return resourceBlackQueenSvg
 }
