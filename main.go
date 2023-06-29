@@ -28,7 +28,8 @@ func createGrid() *fyne.Container {
 			if j%2 == i%2 {
 				bg.FillColor = color.Gray{0xE0}
 			}
-			grid.Add(bg)
+			img := canvas.NewImageFromResource(resourceForPiece())
+			grid.Add(container.NewMax(bg, img))
 		}
 	}
 
