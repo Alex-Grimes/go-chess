@@ -2,6 +2,8 @@ package main
 
 import (
 	"image/color"
+	"math/rand"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -18,6 +20,16 @@ func main() {
 	grid := createGrid(game.Position().Board())
 	w.SetContent(grid)
 	w.Resize(fyne.NewSize(480, 480))
+
+	go func() {
+		rand.Seed(time.Now().UnixNano())
+		for game.Outcome() == chess.NoOutcome {
+			time.Sleep(time.Microsecond * 500)
+			valid := game.ValidMoves()
+			m := valid[rand.Intn(len(valid))]
+			move(m, game)
+		}
+	}()
 	w.ShowAndRun()
 }
 
@@ -38,4 +50,11 @@ func createGrid(b *chess.Board) *fyne.Container {
 	}
 
 	return grid
+}
+
+func move(m chess.Move, game *chess.Game) {
+	game.Move(m)
+	grid := createGrid(game.Position().Board())
+	w.SetContent(grid)
+	w.Resize(fyne.NewSize(480, 480))
 }
