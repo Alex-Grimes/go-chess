@@ -7,28 +7,32 @@ import (
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"github.com/notnil/chess"
 )
 
 func main() {
 	a := app.New()
 	w := a.NewWindow("Hello")
 
-	grid := createGrid()
+	game := chess.NewGame()
+	grid := createGrid(game.Position().Board())
 	w.SetContent(grid)
 	w.Resize(fyne.NewSize(480, 480))
 	w.ShowAndRun()
 }
 
-func createGrid() *fyne.Container {
+func createGrid(b *chess.Board) *fyne.Container {
 	grid := container.NewGridWithColumns(8)
 
-	for i := 0; i < 8; i++ {
-		for j := 0; j < 8; j++ {
+	for y := 0; y < 8; y++ {
+		for x := 0; x < 8; x++ {
 			bg := canvas.NewRectangle(color.Gray{0x30})
-			if j%2 == i%2 {
+			if x%2 == y%2 {
 				bg.FillColor = color.Gray{0xE0}
 			}
-			img := canvas.NewImageFromResource(resourceForPiece())
+			p := b.Piece(chess.Square(x + (7-y)*8))
+			img := canvas.NewImageFromResource(resourceForPiece(p))
+			img.FillMode = canvas.ImageFillContain
 			grid.Add(container.NewMax(bg, img))
 		}
 	}
